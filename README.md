@@ -8,7 +8,9 @@ The radar uses SourceMod's HUD (Heads-Up Display) text functionality to render t
 
 Note: This radar only shows teammates and is designed for team coordination and tactical awareness in controlled environments (Comp coaching/scrims). It does not provide any information about enemy positions.
 
-Here's a breakdown of its functionality:<details><summary>‎ </summary
+Here's a breakdown of its functionality: 
+<details> 
+<summary>‎ </summary>
 
 1. **Initialization**: When a player connects, the radar is automatically enabled for them.
 
