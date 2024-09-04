@@ -1,8 +1,32 @@
 <h1 align="center">TF2 Team Radar</h1>
 
-A lightweight SourceMod plugin that adds a basic team-only radar to Team Fortress 2.
+## How It Works
 
-Note: This used to be an addon for competitive coaching and can be used in controlled scrims for practice.
+The TF2 Team Radar plugin creates a simple, real-time radar display for each player, showing the positions of their teammates relative to their own position. 
+
+The radar uses SourceMod's HUD (Heads-Up Display) text functionality to render the dots, making it a lightweight solution that doesn't require any client-side modifications.
+
+Note: This radar only shows teammates and is designed for team coordination and tactical awareness in controlled environments (Comp coaching/scrims). It does not provide any information about enemy positions.
+
+Here's a breakdown of its functionality:<details><summary>‎ </summary
+
+1. **Initialization**: When a player connects, the radar is automatically enabled for them.
+
+2. **Regular Updates**: The plugin updates the radar display at regular intervals (default: every 0.1 seconds).
+
+3. **Player Position Calculation**: For each update, the plugin:
+   - Gets the position and angle of the player
+   - Calculates the relative positions of all teammates
+
+4. **Radar Display**: The plugin then:
+   - Creates a radar background in the top-left corner of the screen
+   - Represents each teammate as a dot on this radar
+
+5. **Rotation**: The radar rotates based on the player's view angle, ensuring that "up" on the radar always corresponds to the direction the player is facing.
+
+6. **Range Limitation**: Only teammates within a certain range (default: 2560 game units) are displayed on the radar.
+
+</details>
 
 ## Features
 
