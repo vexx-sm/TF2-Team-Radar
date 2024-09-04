@@ -1,4 +1,4 @@
-<h1 align="center">TF2 Team Radar
+<h1 align="center">TF2 Team Radar</h1>
 
 A lightweight SourceMod plugin that adds a basic team-only radar to Team Fortress 2.
 
