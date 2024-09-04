@@ -4,7 +4,8 @@ The TF2 Team Radar plugin creates a simple, real-time radar display for each pla
 
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
-Note: This radar only shows teammates and is designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). It does not provide any information about enemy positions.
+>[!NOTE]
+> Note: This radar only shows teammates and is designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). It does not provide any information about enemy positions.
 
 <details>
 <summary>‎ <ins>Here's a breakdown of its functionality;</ins> </summary>
