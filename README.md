@@ -55,12 +55,12 @@ Note: This radar only shows teammates and is designed for team coordination and 
 
 ```
 // Customizable settings
-#define UPDATE_INTERVAL 0.1 // How often the radar updates (in seconds)
+#define UPDATE_INTERVAL 0.1	// How often the radar updates (in seconds)
 #define RADAR_SIZE 2560.0 	// The in-game units the radar covers
 #define RADAR_SCALE 0.225 	// The size of the radar on the screen (0-1)
 
 // Colors (RGBA format)
-#define COLOR_SELF {255, 255, 0, 255} 			// Default {255, 255, 0, 255} Yellow
+#define COLOR_SELF {255, 255, 0, 255}			// Default {255, 255, 0, 255} Yellow
 #define COLOR_TEAMMATE_HEALTHY {0, 255, 0, 255} // Default {0, 255, 0, 255} Green
 #define COLOR_TEAMMATE_LOW {255, 0, 0, 255} 	// Default {255, 0, 0, 255} Red
 
