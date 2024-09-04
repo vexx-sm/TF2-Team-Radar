@@ -43,8 +43,8 @@ Note: This radar only shows teammates and is designed for team coordination and 
 
 ## Installation
 
-1. Download the latest plugin release from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
-2. Place `team_radar.smx` in your plugins `addons/sourcemod/plugins` folder.
+1. Download the latest `team_radar.smx` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+2. Place it in your plugins folder `addons/sourcemod/plugins`.
 3. Reload the plugin or restart your server.
 
 ## Customization
