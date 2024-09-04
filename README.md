@@ -9,10 +9,14 @@ Note: This used to be an addon for competitive coaching and can be used in contr
 - Toggle radar on/off with `!radar` command
 - Automatically enabled for players upon connection
 
+## Requirements
+
+- The latest [SourceMod](https://www.sourcemod.net/downloads.php) release.
+
 ## Installation
 
-1. Download the latest release from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
-2. Place `team_radar.smx` in your plugins `addons/sourcemod/plugins` directory.
+1. Download the plugin from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+2. Place `team_radar.smx` in your plugins `addons/sourcemod/plugins` folder.
 3. Reload the plugin or restart your server.
 
 ## Usage
