@@ -2,7 +2,7 @@
 
 The TF2 Team Radar plugin creates a simple, real-time radar display for each player, showing the positions of their teammates relative to their own position. 
 
-The radar uses SourceMod's HUD text functionality to render the dots, making it a lightweight solution that doesn't require any client-side modifications.
+The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
 Note: This radar only shows teammates and is designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). It does not provide any information about enemy positions.
 
@@ -30,8 +30,7 @@ Note: This radar only shows teammates and is designed for team coordination and 
 ## Features
 
 - Displays teammates on a radar in the top-left corner of the screen
-- Toggle radar on/off with `!radar` command
-- Automatically enabled for players upon connection
+- Toggle radar on/off with `!radar` or `sm_radar` command
 
 ## Requirements
 
@@ -42,10 +41,6 @@ Note: This radar only shows teammates and is designed for team coordination and 
 1. Download the latest plugin release from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
 2. Place `team_radar.smx` in your plugins `addons/sourcemod/plugins` folder.
 3. Reload the plugin or restart your server.
-
-## Usage
-
-- Use `!radar` or `sm_radar` to toggle the radar on/off.
 
 ## Customization
 
