@@ -7,7 +7,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 Note: This radar only shows teammates and is designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). It does not provide any information about enemy positions.
 
 <details>
-<summary>‎ __Here's a breakdown of its functionality;__ </summary>
+<summary>‎ <ins>Here's a breakdown of its functionality;</ins> </summary>
 
 1. **Initialization**: When a player connects, the radar is automatically enabled for them.
 
