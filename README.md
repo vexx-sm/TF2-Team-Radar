@@ -1,4 +1,4 @@
-<h1 align="center">TF2 Team Radar</h1>
+<h1 align="center">Team Fortress 2 Team Radar</h1>
 
 The TF2 Team Radar plugin creates a simple, real-time radar display for each player, showing the positions of their teammates relative to their own position. 
 
