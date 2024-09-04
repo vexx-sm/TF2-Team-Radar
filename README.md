@@ -1,14 +1,12 @@
 <h1 align="center">TF2 Team Radar</h1>
 
-## How It Works
-
 The TF2 Team Radar plugin creates a simple, real-time radar display for each player, showing the positions of their teammates relative to their own position. 
 
 The radar uses SourceMod's HUD (Heads-Up Display) text functionality to render the dots, making it a lightweight solution that doesn't require any client-side modifications.
 
 Note: This radar only shows teammates and is designed for team coordination and tactical awareness in controlled environments (Comp coaching/scrims). It does not provide any information about enemy positions.
 
-Here's a breakdown of its functionality <details> <summary>‎ </summary>
+Here's a breakdown of its functionality<details> <summary>‎ </summary>
 
 1. **Initialization**: When a player connects, the radar is automatically enabled for them.
 
