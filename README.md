@@ -15,7 +15,7 @@ Note: This used to be an addon for competitive coaching and can be used in contr
 
 ## Installation
 
-1. Download the plugin from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+1. Download the latest plugin release from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
 2. Place `team_radar.smx` in your plugins `addons/sourcemod/plugins` folder.
 3. Reload the plugin or restart your server.
 
@@ -25,9 +25,9 @@ Note: This used to be an addon for competitive coaching and can be used in contr
 
 ## Customization
 
-1. Download the latest source code from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+1. Download the latest `team_radar.sp` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
 
-2. Edit `team_radar.sp`
+2. Customization is commented:
 
 ```
 #pragma newdecls required
@@ -47,7 +47,7 @@ Note: This used to be an addon for competitive coaching and can be used in contr
 ```
 
 
-2. Compile `team_radar.sp` using the SourceMod compiler.
+2. Compile.
 
 ## Contributing
 
