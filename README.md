@@ -77,4 +77,4 @@ Note: This radar only shows teammates and is designed for team coordination and 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Feel free to submit a Pull Request.
