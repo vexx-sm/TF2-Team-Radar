@@ -72,10 +72,8 @@ Note: This radar only shows teammates and is designed for team coordination and 
 
 3. Compile.
 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
+## License & Contributing
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Contributions are welcome! Please feel free to submit a Pull Request.
