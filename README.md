@@ -1,6 +1,7 @@
-# TF2 Team Radar
+<h1 align="center">TF2 Team Radar
 
 A lightweight SourceMod plugin that adds a basic team-only radar to Team Fortress 2.
+
 Note: This used to be an addon for competitive coaching and can be used in controlled scrims for practice.
 
 ## Features
@@ -47,7 +48,7 @@ Note: This used to be an addon for competitive coaching and can be used in contr
 ```
 
 
-2. Compile.
+3. Compile.
 
 ## Contributing
 
