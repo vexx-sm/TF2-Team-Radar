@@ -1,0 +1,9 @@
+# Compiled files
+*.smx
+
+# SourceMod files
+scripting/include/
+
+# Operating system files
+.DS_Store
+Thumbs.db
