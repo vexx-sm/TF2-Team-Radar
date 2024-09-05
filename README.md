@@ -5,7 +5,7 @@ The TF2 Team Radar plugin creates a simple, real-time radar display for each pla
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
 >[!NOTE]
-> This plugin only shows teammates and is generally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). It does not provide any information about enemy positions.
+> **This plugin only shows teammates** and is generally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). **It does not provide any information about enemy positions.**
 
 <details>
 <summary>‎ <ins>Here's a breakdown of its functionality;</ins> </summary>
@@ -35,9 +35,12 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 - Displays teammates on a radar in the top-left corner of the screen
 - Toggle radar on/off with `!radar` or `sm_radar` command
 - Teammate dots change color based on health:
+
   - Green: Above 50% health
   - Red: 50% health or below
-- Ping System: Players can mark locations on the radar for their teammates
+  
+- Pinging system where players can mark locations on the radar for their teammates
+
   - Use `!mapping` or `sm_mapping` to ping the location you're looking at, ideally use `bind <key> "say /mapping"`.
   - Pings appear as yellow exclamation marks (!) on the radar
   - Pings last for 5 seconds and have a 3-second cooldown
