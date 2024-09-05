@@ -16,7 +16,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 3. **Player Position Calculation**: For each update, the plugin:
    - Gets the position and angle of the player
-   - Calculates the relative positions of all teammates
+   - Calculates the relative positions/health of all teammates
 
 4. **Radar Display**: The plugin then:
    - Creates a radar background in the top-left corner of the screen
@@ -37,6 +37,11 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 - Teammate dots change color based on health:
   - Green: Above 50% health
   - Red: 50% health or below
+- Ping System: Players can mark locations on the radar for their teammates
+  - Use `!mapping` or `sm_mapping` to ping the location you're looking at, ideally use `bind <key> "say /mapping"`.
+  - Pings appear as yellow exclamation marks (!) on the radar
+  - Pings last for 5 seconds and have a 3-second cooldown
+
 
 ## Requirements
 
@@ -55,7 +60,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 2. Edit these commented lines:
 
 ```
-// Customizable settings
+// Core settings
 #define UPDATE_INTERVAL 0.1	// How often the radar updates (in seconds)
 #define RADAR_SIZE 2560.0 	// The in-game units the radar covers
 #define RADAR_SCALE 0.225 	// The size of the radar on the screen (0-1)
@@ -68,6 +73,11 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 // Radar position
 #define RADAR_X 0.01 // X position of the radar (0-1)
 #define RADAR_Y 0.01 // Y position of the radar (0-1)
+
+// Ping system settings
+#define MAX_PINGS 5
+#define PING_DURATION 5.0
+#define PING_COOLDOWN 3.0
 ```
 
 
