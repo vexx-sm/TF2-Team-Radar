@@ -58,7 +58,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 ## Customization
 
-1. Download the latest `team_radar.sp` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+1. Download the latest `team_radar.sp` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page
 
 2. Edit these commented lines:
 
@@ -84,7 +84,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ```
 
 
-3. Compile.
+3. Compile
 
 
 ## License & Contributing
