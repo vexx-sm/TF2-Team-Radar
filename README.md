@@ -91,4 +91,4 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Contributions are welcome! Feel free to submit a Pull Request.
+Requests & Contributions are welcome! Feel free to submit a Pull Request.
