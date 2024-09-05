@@ -26,7 +26,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 5. **Rotation**: The radar rotates based on the player's view angle, ensuring that "up" on the radar always corresponds to the direction the player is facing.
 
-6. **Range Limitation**: Only teammates within a certain range (default: 2560 game units) are displayed on the radar.
+6. **Range Limitation**: Only teammates within a certain range are displayed on the radar. (Customizable, default is 2560 game units)
 
 </details>
 
