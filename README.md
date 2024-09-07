@@ -12,7 +12,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 1. **Initialization**: When a player connects, the radar is automatically enabled for them.
 
-2. **Regular Updates**: The plugin updates the radar display at regular intervals (default: every 0.1 seconds).
+2. **Regular Updates**: The plugin updates the radar display at regular intervals (Customizable, default: every 0.1 seconds).
 
 3. **Player Position Calculation**: For each update, the plugin:
    - Gets the position and angle of the player
