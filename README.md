@@ -33,7 +33,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Features
 
 - Displays teammates on a radar in the top-left corner of the screen
-- Toggle radar on/off with `!radar` or `sm_radar` command
+- Customization and a Toggle for each player with `!radar` or `sm_radar` command , saved between sessions.
 - Teammate dots change color based on health:
 
   - Green: Above 50% health
@@ -64,23 +64,25 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 ```
 // Core settings
-#define UPDATE_INTERVAL 0.1	// How often the radar updates (in seconds)
-#define RADAR_SIZE 2560.0 	// The in-game units the radar covers
-#define RADAR_SCALE 0.225 	// The size of the radar on the screen (0-1)
+//╭──────────────────────────────────.★..─╮
+
+// Core Settings
+#define UPDATE_INTERVAL 0.1 // How often the radar updates (in seconds)
+#define RADAR_SIZE 2560.0 // The in-game units the radar covers
+#define RADAR_SCALE 0.225 // The size of the radar on the screen (0-1)
 
 // Colors (RGBA format)
-#define COLOR_SELF {255, 255, 0, 255}		// Default {255, 255, 0, 255} Yellow
-#define COLOR_TEAMMATE_HEALTHY {0, 255, 0, 255} // Default {0, 255, 0, 255} Green
-#define COLOR_TEAMMATE_LOW {255, 0, 0, 255} 	// Default {255, 0, 0, 255} Red
-
-// Radar position
-#define RADAR_X 0.01 // X position of the radar (0-1)
-#define RADAR_Y 0.01 // Y position of the radar (0-1)
+#define COLOR_SELF {255, 255, 0, 255} // Yellow
+#define COLOR_TEAMMATE_HEALTHY {0, 255, 0, 255} // Green
+#define COLOR_TEAMMATE_LOW {255, 0, 0, 255} // Red
+#define COLOR_PING {255, 255, 0, 255} // Yellow
 
 // Ping system settings
-#define MAX_PINGS 5
+#define MAX_PINGS 5			
 #define PING_DURATION 5.0
 #define PING_COOLDOWN 3.0
+
+//╰─..★.───────────────────────────────────╯
 ```
 
 

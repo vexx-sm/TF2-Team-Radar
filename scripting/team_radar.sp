@@ -3,9 +3,9 @@
 #include <sdkhooks>
 #include <tf2>
 #include <tf2_stocks>
+#include <clientprefs>
 
 #pragma newdecls required
-
 
 //╭──────────────────────────────────.★..─╮
 
@@ -20,10 +20,6 @@
 #define COLOR_TEAMMATE_LOW {255, 0, 0, 255} // Red
 #define COLOR_PING {255, 255, 0, 255} // Yellow
 
-// Customizable radar position
-#define RADAR_X 0.01 // X position of the radar (0-1)
-#define RADAR_Y 0.01 // Y position of the radar (0-1)
-
 // Ping system settings
 #define MAX_PINGS 5			
 #define PING_DURATION 5.0
@@ -31,25 +27,37 @@
 
 //╰─..★.───────────────────────────────────╯
 
+#define max(%1,%2) (((%1) > (%2)) ? (%1) : (%2))
+#define min(%1,%2) (((%1) < (%2)) ? (%1) : (%2))
+#define RADAR_X 0.01
+#define RADAR_Y 0.01
 
 public Plugin myinfo = {
     name = "TF2 Team Radar",
     author = "vexx-sm",
     description = "Adds a basic team-only radar to Team Fortress 2.",
-    version = "1.2",
+    version = "1.2.1",
     url = "https://github.com/vexx-sm/tf2-team-radar"
 };
 
 Handle g_hUpdateTimer;
+Handle g_hRadarXCookie;
+Handle g_hRadarYCookie;
+
 bool g_bRadarEnabled[MAXPLAYERS + 1] = {true, ...};
 float g_PingPositions[MAXPLAYERS + 1][MAX_PINGS][3];
 float g_PingTimes[MAXPLAYERS + 1][MAX_PINGS];
 float g_LastPingTime[MAXPLAYERS + 1];
+float g_fRadarX[MAXPLAYERS + 1] = {RADAR_X, ...};
+float g_fRadarY[MAXPLAYERS + 1] = {RADAR_Y, ...};
+float g_fPositionStep = 0.01; // The amount to move the radar each time
 
 public void OnPluginStart() {
     g_hUpdateTimer = CreateTimer(UPDATE_INTERVAL, Timer_UpdateMiniMap, _, TIMER_REPEAT);
-    RegConsoleCmd("sm_radar", Command_ToggleRadar, "Toggle the radar on/off");
+    RegConsoleCmd("sm_radar", Command_RadarMenu, "Open the radar menu");
     RegConsoleCmd("sm_mapping", Command_Ping, "Ping the location you're looking at.");
+    g_hRadarXCookie = RegClientCookie("tf2_team_radar_x", "Radar X Position", CookieAccess_Protected);
+    g_hRadarYCookie = RegClientCookie("tf2_team_radar_y", "Radar Y Position", CookieAccess_Protected);
 }
 
 public void OnPluginEnd() {
@@ -60,16 +68,154 @@ public void OnClientConnected(int client) {
     g_bRadarEnabled[client] = true;
 }
 
-public Action Command_ToggleRadar(int client, int args) {
+public void OnClientCookiesCached(int client)
+{
+    LoadRadarPosition(client);
+}
+
+void LoadRadarPosition(int client)
+{
+    char sValue[16];
+    
+    GetClientCookie(client, g_hRadarXCookie, sValue, sizeof(sValue));
+    if (sValue[0] != '\0')
+        g_fRadarX[client] = StringToFloat(sValue);
+    else
+        g_fRadarX[client] = RADAR_X;
+    
+    GetClientCookie(client, g_hRadarYCookie, sValue, sizeof(sValue));
+    if (sValue[0] != '\0')
+        g_fRadarY[client] = StringToFloat(sValue);
+    else
+        g_fRadarY[client] = RADAR_Y;
+}
+
+void SaveRadarPosition(int client)
+{
+    char sValue[16];
+    
+    FloatToString(g_fRadarX[client], sValue, sizeof(sValue));
+    SetClientCookie(client, g_hRadarXCookie, sValue);
+    
+    FloatToString(g_fRadarY[client], sValue, sizeof(sValue));
+    SetClientCookie(client, g_hRadarYCookie, sValue);
+}
+
+public Action Command_RadarMenu(int client, int args) {
     if (client == 0) {
         ReplyToCommand(client, "This command can only be used in-game.");
         return Plugin_Handled;
     }
-
-    g_bRadarEnabled[client] = !g_bRadarEnabled[client];
-    ReplyToCommand(client, "Radar has been %s.", g_bRadarEnabled[client] ? "enabled" : "disabled");
+    
+    ShowRadarMenu(client);
     return Plugin_Handled;
 }
+
+void ShowRadarMenu(int client)
+{
+    Menu menu = new Menu(RadarMenuHandler);
+    menu.SetTitle("Radar Menu");
+    menu.AddItem("toggle", g_bRadarEnabled[client] ? "Disable Radar" : "Enable Radar");
+    menu.AddItem("position", "Adjust Position");
+    menu.ExitButton = true;
+    menu.Display(client, MENU_TIME_FOREVER);
+}
+
+void ShowPositionMenu(int client)
+{
+    Menu menu = new Menu(PositionMenuHandler);
+    menu.SetTitle("Adjust Radar Position");
+    menu.AddItem("up", "Move Up");
+    menu.AddItem("down", "Move Down");
+    menu.AddItem("left", "Move Left");
+    menu.AddItem("right", "Move Right");
+    menu.AddItem("reset", "Reset to Default");
+    menu.ExitBackButton = true;
+    menu.Display(client, MENU_TIME_FOREVER);
+}
+
+
+public int RadarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+    switch (action)
+    {
+        case MenuAction_Select:
+        {
+            char info[32];
+            menu.GetItem(param2, info, sizeof(info));
+            
+            if (StrEqual(info, "toggle"))
+            {
+                g_bRadarEnabled[param1] = !g_bRadarEnabled[param1];
+                PrintToChat(param1, "Radar has been %s.", g_bRadarEnabled[param1] ? "enabled" : "disabled");
+                ShowRadarMenu(param1); // Show the menu again after toggling
+            }
+            else if (StrEqual(info, "position"))
+            {
+                ShowPositionMenu(param1);
+            }
+        }
+        case MenuAction_End:
+        {
+            delete menu;
+        }
+    }
+    return 0;
+}
+
+public int PositionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+    switch (action)
+    {
+        case MenuAction_Select:
+        {
+            char info[32];
+            menu.GetItem(param2, info, sizeof(info));
+            
+            if (StrEqual(info, "up"))
+            {
+                g_fRadarY[param1] = max(0.0, g_fRadarY[param1] - g_fPositionStep);
+            }
+            else if (StrEqual(info, "down"))
+            {
+                g_fRadarY[param1] = min(1.0 - RADAR_SCALE, g_fRadarY[param1] + g_fPositionStep);
+            }
+            else if (StrEqual(info, "left"))
+            {
+                g_fRadarX[param1] = max(0.0, g_fRadarX[param1] - g_fPositionStep);
+            }
+            else if (StrEqual(info, "right"))
+            {
+                g_fRadarX[param1] = min(1.0 - RADAR_SCALE, g_fRadarX[param1] + g_fPositionStep);
+            }
+            else if (StrEqual(info, "reset"))
+            {
+                g_fRadarX[param1] = RADAR_X;
+                g_fRadarY[param1] = RADAR_Y;
+            }
+            
+            SaveRadarPosition(param1);
+            ShowPositionMenu(param1);
+        }
+        case MenuAction_Cancel:
+        {
+            if (param2 == MenuCancel_ExitBack || param2 == MenuCancel_Exit)
+            {
+                PrintToChat(param1, "Radar position updated and saved.");
+                if (param2 == MenuCancel_ExitBack)
+                {
+                    ShowRadarMenu(param1);
+                }
+            }
+        }
+        case MenuAction_End:
+        {
+            delete menu;
+        }
+    }
+    return 0;
+}
+
 
 public Action Command_Ping(int client, int args)
 {
@@ -135,13 +281,11 @@ public Action Timer_UpdateMiniMap(Handle timer) {
 
 void UpdateMiniMap(int client) {
     if (!IsPlayerAlive(client)) return;
-
     float playerPos[3], playerAng[3];
     GetClientAbsOrigin(client, playerPos);
     GetClientAbsAngles(client, playerAng);
-
-    float x = RADAR_X;
-    float y = RADAR_Y;
+    float x = g_fRadarX[client];
+    float y = g_fRadarY[client];
     float w = RADAR_SCALE;
     float h = RADAR_SCALE;
     float centerX = x + (w / 2);
@@ -151,37 +295,53 @@ void UpdateMiniMap(int client) {
     
     int selfColor[4] = COLOR_SELF;
     DrawArrow(client, centerX, centerY, selfColor);
-
+        
     float currentTime = GetGameTime();
-
     for (int i = 1; i <= MaxClients; i++) {
-        if (i != client && IsValidClient(i) && IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == GetClientTeam(client)) {
-            float targetPos[3], relativePos[3];
-            GetClientAbsOrigin(i, targetPos);
-            SubtractVectors(targetPos, playerPos, relativePos);
+        if (i != client && IsValidClient(i) && IsClientInGame(i) && IsPlayerAlive(i)) {
+            int clientTeam = GetClientTeam(client);
+            int targetTeam = GetClientTeam(i);
+            bool shouldShow = false;
 
-            float angle = ThisDegToRad(-playerAng[1] - 270);
-            float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
-            float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
-
-            float dotX = centerX + (rotatedX / RADAR_SIZE) * w;
-            float dotY = centerY - (rotatedY / RADAR_SIZE) * h;
-
-            if (dotX >= x && dotX <= x + w && dotY >= y && dotY <= y + h) {
-                int health = GetClientHealth(i);
-                int maxHealth = GetEntProp(i, Prop_Data, "m_iMaxHealth");
-                float healthPercentage = float(health) / float(maxHealth);
-                
-                int color[4];
-                if (healthPercentage <= 0.5) {
-                    color = COLOR_TEAMMATE_LOW;
-                } else {
-                    color = COLOR_TEAMMATE_HEALTHY;
+            // Check if the player is a teammate
+            if (targetTeam == clientTeam) {
+                shouldShow = true;
+            }
+            // Check if the player is an enemy Spy disguised as a teammate
+            else if (TF2_GetPlayerClass(i) == TFClass_Spy && TF2_IsPlayerInCondition(i, TFCond_Disguised)) {
+                int disguiseTeam = GetEntProp(i, Prop_Send, "m_nDisguiseTeam");
+                if (disguiseTeam == clientTeam) {
+                    shouldShow = true;
                 }
-                DrawDot(client, dotX, dotY, color);
+            }
+
+            if (shouldShow) {
+                float targetPos[3], relativePos[3];
+                GetClientAbsOrigin(i, targetPos);
+                SubtractVectors(targetPos, playerPos, relativePos);
+                float angle = ThisDegToRad(-playerAng[1] - 270);
+                float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
+                float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
+                float dotX = centerX + (rotatedX / RADAR_SIZE) * w;
+                float dotY = centerY - (rotatedY / RADAR_SIZE) * h;
+
+                if (dotX >= x && dotX <= x + w && dotY >= y && dotY <= y + h) {
+                    int health = GetClientHealth(i);
+                    int maxHealth = GetEntProp(i, Prop_Data, "m_iMaxHealth");
+                    float healthPercentage = float(health) / float(maxHealth);
+                    
+                    int color[4];
+                    if (healthPercentage <= 0.5) {
+                        color = COLOR_TEAMMATE_LOW;
+                    } else {
+                        color = COLOR_TEAMMATE_HEALTHY;
+                    }
+                    DrawDot(client, dotX, dotY, color);
+                }
             }
         }
     }
+
 
     // Draw pings
     int pingColor[4] = COLOR_PING;
