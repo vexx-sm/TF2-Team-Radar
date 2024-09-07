@@ -33,7 +33,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Features
 
 - Displays teammates on a radar in the top-left corner of the screen
-- Customization and a Toggle for each player with `!radar` or `sm_radar` command , saved between sessions.
+- Customize the radar's position and Toggle with `!radar` or `sm_radar` command , Settings are per player and is saved between sessions.
 - Teammate dots change color based on health:
 
   - Green: Above 50% health
