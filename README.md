@@ -21,7 +21,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 4. **Radar Display**: The plugin then:
    - Creates a radar background in the top-left corner of the screen
    - Represents the player as a yellow up-facing arrow (▲) in the center of the radar
-   - Shows teammates as dots on this radar
+   - Shows teammates as dots on the radar
    - Teammate dots are green when above 50% health, and red when at or below 50% health
 
 5. **Rotation**: The radar rotates based on the player's view angle, ensuring that "up" on the radar always corresponds to the direction the player is facing.
@@ -63,7 +63,6 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 2. Edit these commented lines:
 
 ```
-// Core settings
 //╭──────────────────────────────────.★..─╮
 
 // Core Settings
