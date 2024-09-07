@@ -29,8 +29,8 @@
 
 #define max(%1,%2) (((%1) > (%2)) ? (%1) : (%2))
 #define min(%1,%2) (((%1) < (%2)) ? (%1) : (%2))
-#define RADAR_X 0.01
-#define RADAR_Y 0.01
+#define RADAR_X 0.01	// Default position of the radar
+#define RADAR_Y 0.01	// Default position of the radar
 
 public Plugin myinfo = {
     name = "TF2 Team Radar",
