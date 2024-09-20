@@ -52,6 +52,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Configuration
 
 Edit the config file `tf2_team_radar.cfg` in your `addons/sourcemod/configs/` directory.
+
 You can reload the configuration in-game using the `!reloadradar` command or in the `!radar` menu (admin only).
 
 ## License & Contributing
