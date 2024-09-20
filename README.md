@@ -11,8 +11,6 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Features and Functionality
 
 <details>
-<summary>‎ <ins>Expand for detailed breakdown</ins> </summary>
-
 1. **Radar Display**:
    - Shows teammates as colored dots on a customizable radar display
    - Represents the player as a yellow up-facing arrow (▲) in the center
