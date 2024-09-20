@@ -8,9 +8,8 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 > **This plugin primarily shows teammates** and was originally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). **It does not provide information about enemy positions, except for disguised Spies when enabled by admins.**
 
-## Features and Functionality
+## Features
 
-<details>
 1. **Radar Display**:
    - Shows teammates as colored dots on a customizable radar display
    - Represents the player as a yellow up-facing arrow (▲) in the center
@@ -42,9 +41,6 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 7. **Initialization**:
    - Radar is automatically enabled for players upon connecting
-
-</details>
-
 
 ## Requirements
 
