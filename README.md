@@ -33,7 +33,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 5. **Admin Features**:
    - Toggle visibility of disguised enemy Spies globally on the radar
-   - Edit the config file `tf2_team_radar.cfg` in your `addons/sourcemod/configs/` directory.
+   - Config file to adjust the plugin's core settings (colors, update interval & more).
    - Reload radar configuration on-the-fly with `!reloadradar` or through the radar menu
 
 ## Requirements
@@ -42,9 +42,9 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 ## Installation
 
-1. Download the latest `team_radar.smx` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page and place it in your plugins folder.
+1. Download the latest `team_radar.smx` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page and place it in your `sourcemod\plugins` folder.
 	
-2. Download the latest `tf2_team_radar.cfg` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page and place it in your configs folder.
+2. Download the latest `tf2_team_radar.cfg` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page and place it in your `sourcemod\configs` folder.
 	
 3. Reload the plugin or restart your server.
 
