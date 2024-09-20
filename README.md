@@ -10,10 +10,10 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Features
 
 1. **Radar Display**:
-   - Shows teammates as colored dots
+   - Shows teammates as colored dots (●) or arrows (▽ / △) based on elevation relative to the player
      - Green: Above 50% health
      - Red: 50% health or below
-   - Represents the player as a yellow up-facing arrow (▲) in the center
+   - Represents the player as a yellow up-facing arrow (⮝) in the center
    - Radar is toggleable and it's position is adjustable, settings are saved per player
    - Everything neatly packed under a `!radar` or `sm_radar` command
 
@@ -27,7 +27,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 4. **Pinging System**:
    - Players can mark locations on the radar for their teammates
-   - Use `!mapping` or `sm_mapping` to ping (tip: `bind <key> "say /mapping"`)
+   - Use `!pingradar` or `sm_pingradar` to ping (tip: `bind <key> "say /pingradar"`)
    - Pings appear as yellow exclamation marks (!) on the radar
 
 5. **Admin Features**:

@@ -23,6 +23,9 @@ int g_ColorPing[4] = {255, 255, 0, 255};
 #define min(%1,%2) (((%1) < (%2)) ? (%1) : (%2))
 #define RADAR_X 0.01 // Default position of the radar
 #define RADAR_Y 0.01 // Default position of the radar
+#define ELEVATION_THRESHOLD 150.0  // Units to consider a significant elevation difference
+
+char g_ElevationIcons[3][] = {"▽", "●", "△"};  // Below, Same, Above
 
 public Plugin myinfo = {
     name = "TF2 Team Radar",
@@ -54,7 +57,7 @@ public void OnPluginStart() {
 
     g_hUpdateTimer = CreateTimer(g_cvUpdateInterval.FloatValue, Timer_UpdateMiniMap, _, TIMER_REPEAT);
     RegConsoleCmd("sm_radar", Command_RadarMenu, "Open the radar menu");
-    RegConsoleCmd("sm_mapping", Command_Ping, "Ping the location you're looking at.");
+    RegConsoleCmd("sm_pingradar", Command_Ping, "Ping your current location on the radar");
     RegAdminCmd("sm_reloadradar", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload the Radar config");
     g_hRadarXCookie = RegClientCookie("tf2_team_radar_x", "Radar X Position", CookieAccess_Protected);
     g_hRadarYCookie = RegClientCookie("tf2_team_radar_y", "Radar Y Position", CookieAccess_Protected);
@@ -376,11 +379,20 @@ public Action Timer_UpdateMiniMap(Handle timer) {
     return Plugin_Continue;
 }
 
+void DrawElevationIcon(int client, float x, float y, int color[4], const char[] icon) {
+    Handle hud = CreateHudSynchronizer();
+    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
+    ShowSyncHudText(client, hud, icon);
+    delete hud;
+}
+
 void UpdateMiniMap(int client) {
     if (!IsPlayerAlive(client)) return;
+
     float playerPos[3], playerAng[3];
     GetClientAbsOrigin(client, playerPos);
     GetClientAbsAngles(client, playerAng);
+
     float x = g_fRadarX[client];
     float y = g_fRadarY[client];
     float w = g_cvRadarScale.FloatValue;
@@ -415,9 +427,11 @@ void UpdateMiniMap(int client) {
                 float targetPos[3], relativePos[3];
                 GetClientAbsOrigin(i, targetPos);
                 SubtractVectors(targetPos, playerPos, relativePos);
+
                 float angle = ThisDegToRad(-playerAng[1] - 270);
                 float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
                 float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
+
                 float dotX = centerX + (rotatedX / g_cvRadarSize.FloatValue) * w;
                 float dotY = centerY - (rotatedY / g_cvRadarSize.FloatValue) * h;
 
@@ -432,7 +446,17 @@ void UpdateMiniMap(int client) {
                     } else {
                         color = g_ColorTeammateHealthy;
                     }
-                    DrawDot(client, dotX, dotY, color);
+
+                    // Calculate elevation difference
+                    float elevationDiff = targetPos[2] - playerPos[2];
+                    int elevationIndex = 1;  // Default to same level
+                    if (elevationDiff > ELEVATION_THRESHOLD) {
+                        elevationIndex = 2;  // Above
+                    } else if (elevationDiff < -ELEVATION_THRESHOLD) {
+                        elevationIndex = 0;  // Below
+                    }
+
+                    DrawElevationIcon(client, dotX, dotY, color, g_ElevationIcons[elevationIndex]);
                 }
             }
         }
@@ -450,14 +474,11 @@ void UpdateMiniMap(int client) {
                     float pingPos[3], relativePos[3];
                     pingPos = g_PingPositions[i][j];
                     SubtractVectors(pingPos, playerPos, relativePos);
-
                     float angle = ThisDegToRad(-playerAng[1] - 270);
                     float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
                     float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
-
                     float pingX = centerX + (rotatedX / g_cvRadarSize.FloatValue) * w;
                     float pingY = centerY - (rotatedY / g_cvRadarSize.FloatValue) * h;
-
                     if (pingX >= x && pingX <= x + w && pingY >= y && pingY <= y + h)
                     {
                         DrawPing(client, pingX, pingY, g_ColorPing);
@@ -484,17 +505,12 @@ void DrawPanel(int client, float x, float y) {
     EndMessage();
 }
 
-void DrawDot(int client, float x, float y, int color[4]) {
-    Handle hud = CreateHudSynchronizer();
-    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
-    ShowSyncHudText(client, hud, "●");
-    delete hud;
-}
+
 
 void DrawArrow(int client, float x, float y, int color[4]) {
     Handle hud = CreateHudSynchronizer();
     SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
-    ShowSyncHudText(client, hud, "▲");
+    ShowSyncHudText(client, hud, "⮝");
     delete hud;
 }
 
