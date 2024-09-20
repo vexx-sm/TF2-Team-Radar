@@ -7,38 +7,35 @@
 
 #pragma newdecls required
 
-//╭──────────────────────────────────.★..─╮
+#define CONFIG_FILE "configs/tf2_team_radar.cfg"
 
-// Core Settings
-#define UPDATE_INTERVAL 0.1 // How often the radar updates (in seconds)
-#define RADAR_SIZE 2560.0 // The in-game units the radar covers
-#define RADAR_SCALE 0.225 // The size of the radar on the screen (0-1)
+int g_ColorSelf[4] = {255, 255, 0, 255};
+int g_ColorTeammateHealthy[4] = {0, 255, 0, 255};
+int g_ColorTeammateLow[4] = {255, 0, 0, 255};
+int g_ColorPing[4] = {255, 255, 0, 255};
 
-// Colors (RGBA format)
-#define COLOR_SELF {255, 255, 0, 255} // Yellow
-#define COLOR_TEAMMATE_HEALTHY {0, 255, 0, 255} // Green
-#define COLOR_TEAMMATE_LOW {255, 0, 0, 255} // Red
-#define COLOR_PING {255, 255, 0, 255} // Yellow
-
-// Ping system settings
+// Ping settings
 #define MAX_PINGS 5			
 #define PING_DURATION 5.0
 #define PING_COOLDOWN 3.0
 
-//╰─..★.───────────────────────────────────╯
-
 #define max(%1,%2) (((%1) > (%2)) ? (%1) : (%2))
 #define min(%1,%2) (((%1) < (%2)) ? (%1) : (%2))
-#define RADAR_X 0.01	// Default position of the radar
-#define RADAR_Y 0.01	// Default position of the radar
+#define RADAR_X 0.01 // Default position of the radar
+#define RADAR_Y 0.01 // Default position of the radar
 
 public Plugin myinfo = {
     name = "TF2 Team Radar",
     author = "vexx-sm",
     description = "Adds a basic team-only radar to Team Fortress 2.",
-    version = "1.2.1",
+    version = "1.3.0",
     url = "https://github.com/vexx-sm/tf2-team-radar"
 };
+
+ConVar g_cvUpdateInterval;
+ConVar g_cvRadarSize;
+ConVar g_cvRadarScale;
+ConVar g_cvShowDisguisedSpies;
 
 Handle g_hUpdateTimer;
 Handle g_hRadarXCookie;
@@ -53,11 +50,75 @@ float g_fRadarY[MAXPLAYERS + 1] = {RADAR_Y, ...};
 float g_fPositionStep = 0.01; // The amount to move the radar each time
 
 public void OnPluginStart() {
-    g_hUpdateTimer = CreateTimer(UPDATE_INTERVAL, Timer_UpdateMiniMap, _, TIMER_REPEAT);
+    LoadConfig();
+
+    g_hUpdateTimer = CreateTimer(g_cvUpdateInterval.FloatValue, Timer_UpdateMiniMap, _, TIMER_REPEAT);
     RegConsoleCmd("sm_radar", Command_RadarMenu, "Open the radar menu");
     RegConsoleCmd("sm_mapping", Command_Ping, "Ping the location you're looking at.");
+    RegAdminCmd("sm_reloadradar", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload the Radar config");
     g_hRadarXCookie = RegClientCookie("tf2_team_radar_x", "Radar X Position", CookieAccess_Protected);
     g_hRadarYCookie = RegClientCookie("tf2_team_radar_y", "Radar Y Position", CookieAccess_Protected);
+	
+}
+
+bool g_bConfigLoaded = false;
+
+void LoadConfig() {
+    g_bConfigLoaded = false;  // Reset the flag
+    
+    char configPath[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, configPath, sizeof(configPath), CONFIG_FILE);
+
+    if (!FileExists(configPath)) {
+        LogError("Configuration file %s not found", configPath);
+        return;
+    }
+
+    KeyValues kv = new KeyValues("TF2TeamRadar");
+    if (!kv.ImportFromFile(configPath)) {
+        LogError("Error loading configuration file %s", configPath);
+        delete kv;
+        return;
+    }
+
+    g_cvUpdateInterval = CreateConVar("sm_radar_update_interval", "0.1", "How often the radar updates (in seconds)");
+    g_cvRadarSize = CreateConVar("sm_radar_size", "2560.0", "The in-game units the radar covers");
+    g_cvRadarScale = CreateConVar("sm_radar_scale", "0.225", "The size of the radar on the screen (0-1)");
+
+    g_cvUpdateInterval.SetFloat(kv.GetFloat("update_interval", 0.1));
+    g_cvRadarSize.SetFloat(kv.GetFloat("radar_size", 2560.0));
+    g_cvRadarScale.SetFloat(kv.GetFloat("radar_scale", 0.225));
+	
+    g_cvShowDisguisedSpies = CreateConVar("sm_radar_show_disguised_spies", "1", "Show disguised enemy spies on the radar (0 = No, 1 = Yes)");
+    g_cvShowDisguisedSpies.SetBool(view_as<bool>(kv.GetNum("show_disguised_spies", 1)));
+
+
+    char colorBuffer[16];
+
+    kv.GetString("color_self", colorBuffer, sizeof(colorBuffer), "255 255 0 255");
+    ParseColor(colorBuffer, g_ColorSelf);
+
+    kv.GetString("color_teammate_healthy", colorBuffer, sizeof(colorBuffer), "0 255 0 255");
+    ParseColor(colorBuffer, g_ColorTeammateHealthy);
+
+    kv.GetString("color_teammate_low", colorBuffer, sizeof(colorBuffer), "255 0 0 255");
+    ParseColor(colorBuffer, g_ColorTeammateLow);
+
+    kv.GetString("color_ping", colorBuffer, sizeof(colorBuffer), "255 255 0 255");
+    ParseColor(colorBuffer, g_ColorPing);
+
+    delete kv;
+    g_bConfigLoaded = true;  // Set the flag to indicate successful load
+    LogMessage("Radar configuration loaded successfully.");
+}
+
+void ParseColor(const char[] colorString, int color[4]) {
+    char parts[4][4];
+    ExplodeString(colorString, " ", parts, sizeof(parts), sizeof(parts[]));
+    
+    for (int i = 0; i < 4; i++) {
+        color[i] = StringToInt(parts[i]);
+    }
 }
 
 public void OnPluginEnd() {
@@ -117,6 +178,13 @@ void ShowRadarMenu(int client)
     menu.SetTitle("Radar Menu");
     menu.AddItem("toggle", g_bRadarEnabled[client] ? "Disable Radar" : "Enable Radar");
     menu.AddItem("position", "Adjust Position");
+    if (CheckCommandAccess(client, "sm_reloadradar", ADMFLAG_CONFIG))
+    {
+        menu.AddItem("reload", "Reload Configuration");
+        char spiesInfo[64];
+        FormatEx(spiesInfo, sizeof(spiesInfo), "Show Disguised Spies: %s", g_cvShowDisguisedSpies.BoolValue ? "On" : "Off");
+        menu.AddItem("spies", spiesInfo);
+    }
     menu.ExitButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
 }
@@ -134,7 +202,6 @@ void ShowPositionMenu(int client)
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
-
 public int RadarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
     switch (action)
@@ -148,12 +215,22 @@ public int RadarMenuHandler(Menu menu, MenuAction action, int param1, int param2
             {
                 g_bRadarEnabled[param1] = !g_bRadarEnabled[param1];
                 PrintToChat(param1, "Radar has been %s.", g_bRadarEnabled[param1] ? "enabled" : "disabled");
-                ShowRadarMenu(param1); // Show the menu again after toggling
             }
             else if (StrEqual(info, "position"))
             {
                 ShowPositionMenu(param1);
+                return 0;
             }
+            else if (StrEqual(info, "reload"))
+            {
+                FakeClientCommand(param1, "sm_reloadradar");
+            }
+            else if (StrEqual(info, "spies"))
+            {
+                g_cvShowDisguisedSpies.SetBool(!g_cvShowDisguisedSpies.BoolValue);
+                PrintToChat(param1, "Show Disguised Spies: %s", g_cvShowDisguisedSpies.BoolValue ? "On" : "Off");
+            }
+            ShowRadarMenu(param1); // Show the menu again after any action
         }
         case MenuAction_End:
         {
@@ -162,6 +239,7 @@ public int RadarMenuHandler(Menu menu, MenuAction action, int param1, int param2
     }
     return 0;
 }
+
 
 public int PositionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
@@ -178,7 +256,7 @@ public int PositionMenuHandler(Menu menu, MenuAction action, int param1, int par
             }
             else if (StrEqual(info, "down"))
             {
-                g_fRadarY[param1] = min(1.0 - RADAR_SCALE, g_fRadarY[param1] + g_fPositionStep);
+                g_fRadarY[param1] = min(1.0 - g_cvRadarScale.FloatValue, g_fRadarY[param1] + g_fPositionStep);
             }
             else if (StrEqual(info, "left"))
             {
@@ -186,7 +264,7 @@ public int PositionMenuHandler(Menu menu, MenuAction action, int param1, int par
             }
             else if (StrEqual(info, "right"))
             {
-                g_fRadarX[param1] = min(1.0 - RADAR_SCALE, g_fRadarX[param1] + g_fPositionStep);
+                g_fRadarX[param1] = min(1.0 - g_cvRadarScale.FloatValue, g_fRadarX[param1] + g_fPositionStep);
             }
             else if (StrEqual(info, "reset"))
             {
@@ -216,6 +294,25 @@ public int PositionMenuHandler(Menu menu, MenuAction action, int param1, int par
     return 0;
 }
 
+public Action Command_ReloadConfig(int client, int args)
+{
+    LogMessage("Reloading radar configuration...");
+    LoadConfig();
+    if (g_bConfigLoaded)
+    {
+        ReplyToCommand(client, "[Radar] Configuration reloaded successfully.");
+        
+        // Recreate the timer with the new update interval
+        delete g_hUpdateTimer;
+        g_hUpdateTimer = CreateTimer(g_cvUpdateInterval.FloatValue, Timer_UpdateMiniMap, _, TIMER_REPEAT);
+    }
+    else
+    {
+        ReplyToCommand(client, "[Radar] Failed to reload configuration. Check server logs for details.");
+    }
+    
+    return Plugin_Handled;
+}
 
 public Action Command_Ping(int client, int args)
 {
@@ -286,15 +383,14 @@ void UpdateMiniMap(int client) {
     GetClientAbsAngles(client, playerAng);
     float x = g_fRadarX[client];
     float y = g_fRadarY[client];
-    float w = RADAR_SCALE;
-    float h = RADAR_SCALE;
+    float w = g_cvRadarScale.FloatValue;
+    float h = g_cvRadarScale.FloatValue;
     float centerX = x + (w / 2);
     float centerY = y + (h / 2);
     
     DrawPanel(client, x, y);
     
-    int selfColor[4] = COLOR_SELF;
-    DrawArrow(client, centerX, centerY, selfColor);
+    DrawArrow(client, centerX, centerY, g_ColorSelf);
         
     float currentTime = GetGameTime();
     for (int i = 1; i <= MaxClients; i++) {
@@ -308,7 +404,7 @@ void UpdateMiniMap(int client) {
                 shouldShow = true;
             }
             // Check if the player is an enemy Spy disguised as a teammate
-            else if (TF2_GetPlayerClass(i) == TFClass_Spy && TF2_IsPlayerInCondition(i, TFCond_Disguised)) {
+            else if (g_cvShowDisguisedSpies.BoolValue && TF2_GetPlayerClass(i) == TFClass_Spy && TF2_IsPlayerInCondition(i, TFCond_Disguised)) {
                 int disguiseTeam = GetEntProp(i, Prop_Send, "m_nDisguiseTeam");
                 if (disguiseTeam == clientTeam) {
                     shouldShow = true;
@@ -322,8 +418,8 @@ void UpdateMiniMap(int client) {
                 float angle = ThisDegToRad(-playerAng[1] - 270);
                 float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
                 float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
-                float dotX = centerX + (rotatedX / RADAR_SIZE) * w;
-                float dotY = centerY - (rotatedY / RADAR_SIZE) * h;
+                float dotX = centerX + (rotatedX / g_cvRadarSize.FloatValue) * w;
+                float dotY = centerY - (rotatedY / g_cvRadarSize.FloatValue) * h;
 
                 if (dotX >= x && dotX <= x + w && dotY >= y && dotY <= y + h) {
                     int health = GetClientHealth(i);
@@ -332,9 +428,9 @@ void UpdateMiniMap(int client) {
                     
                     int color[4];
                     if (healthPercentage <= 0.5) {
-                        color = COLOR_TEAMMATE_LOW;
+                        color = g_ColorTeammateLow;
                     } else {
-                        color = COLOR_TEAMMATE_HEALTHY;
+                        color = g_ColorTeammateHealthy;
                     }
                     DrawDot(client, dotX, dotY, color);
                 }
@@ -342,9 +438,7 @@ void UpdateMiniMap(int client) {
         }
     }
 
-
     // Draw pings
-    int pingColor[4] = COLOR_PING;
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsValidClient(i) && IsClientInGame(i) && GetClientTeam(i) == GetClientTeam(client))
@@ -361,12 +455,12 @@ void UpdateMiniMap(int client) {
                     float rotatedX = relativePos[0] * Cosine(angle) - relativePos[1] * Sine(angle);
                     float rotatedY = relativePos[0] * Sine(angle) + relativePos[1] * Cosine(angle);
 
-                    float pingX = centerX + (rotatedX / RADAR_SIZE) * w;
-                    float pingY = centerY - (rotatedY / RADAR_SIZE) * h;
+                    float pingX = centerX + (rotatedX / g_cvRadarSize.FloatValue) * w;
+                    float pingY = centerY - (rotatedY / g_cvRadarSize.FloatValue) * h;
 
                     if (pingX >= x && pingX <= x + w && pingY >= y && pingY <= y + h)
                     {
-                        DrawPing(client, pingX, pingY, pingColor);
+                        DrawPing(client, pingX, pingY, g_ColorPing);
                     }
                 }
             }
@@ -374,10 +468,9 @@ void UpdateMiniMap(int client) {
     }
 }
 
-
 void DrawPanel(int client, float x, float y) {
     Handle hud = CreateHudSynchronizer();
-    SetHudTextParams(x, y, UPDATE_INTERVAL + 0.1, 255, 255, 255, 0);
+    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, 255, 255, 255, 0);
     ShowSyncHudText(client, hud, "");
     delete hud;
 
@@ -393,14 +486,14 @@ void DrawPanel(int client, float x, float y) {
 
 void DrawDot(int client, float x, float y, int color[4]) {
     Handle hud = CreateHudSynchronizer();
-    SetHudTextParams(x, y, UPDATE_INTERVAL + 0.1, color[0], color[1], color[2], color[3]);
-    ShowSyncHudText(client, hud, "•");
+    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
+    ShowSyncHudText(client, hud, "●");
     delete hud;
 }
 
 void DrawArrow(int client, float x, float y, int color[4]) {
     Handle hud = CreateHudSynchronizer();
-    SetHudTextParams(x, y, UPDATE_INTERVAL + 0.1, color[0], color[1], color[2], color[3]);
+    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
     ShowSyncHudText(client, hud, "▲");
     delete hud;
 }
@@ -408,11 +501,10 @@ void DrawArrow(int client, float x, float y, int color[4]) {
 void DrawPing(int client, float x, float y, int color[4])
 {
     Handle hud = CreateHudSynchronizer();
-    SetHudTextParams(x, y, UPDATE_INTERVAL + 0.1, color[0], color[1], color[2], color[3]);
+    SetHudTextParams(x, y, g_cvUpdateInterval.FloatValue + 0.1, color[0], color[1], color[2], color[3]);
     ShowSyncHudText(client, hud, "!");
     delete hud;
 }
-
 
 void PrintToTeam(int client, const char[] message)
 {

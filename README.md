@@ -5,46 +5,64 @@ The TF2 Team Radar plugin creates a simple, real-time radar display for each pla
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
 >[!NOTE]
-> **This plugin only shows teammates** and was originally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). **It does not provide any information about enemy positions.**
+
+> **This plugin primarily shows teammates** and was originally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). **It does not provide information about enemy positions, except for disguised Spies when enabled by admins.**
 
 <details>
+
 <summary>‎ <ins>Here's a breakdown of its functionality;</ins> </summary>
 
 1. **Initialization**: When a player connects, the radar is automatically enabled for them.
 
-2. **Regular Updates**: The plugin updates the radar display at regular intervals (Customizable, default: every 0.1 seconds).
+2. **Regular Updates**: The plugin updates the radar display at regular intervals (Customizable through config file).
 
 3. **Player Position Calculation**: For each update, the plugin:
+
    - Gets the position and angle of the player
+
    - Calculates the relative positions/health of all teammates
 
 4. **Radar Display**: The plugin then:
-   - Creates a radar background in the top-left corner of the screen
+
+   - Creates a radar background in a customizable position on the screen
+
    - Represents the player as a yellow up-facing arrow (▲) in the center of the radar
+
    - Shows teammates as dots on the radar
+
    - Teammate dots are green when above 50% health, and red when at or below 50% health
 
 5. **Rotation**: The radar rotates based on the player's view angle, ensuring that "up" on the radar always corresponds to the direction the player is facing.
 
-6. **Range Limitation**: Only teammates within a certain range are displayed on the radar. (Customizable, default is 2560 game units)
+6. **Range Limitation**: Only teammates within a certain range are displayed on the radar. (Customizable through config file)
 
 </details>
 
 ## Features
 
-- Displays teammates on a radar in the top-left corner of the screen
-- Customize the radar's position and Toggle with `!radar` or `sm_radar` command , Settings are per player and is saved between sessions.
+- Displays teammates on a radar in a customizable position on the screen
+
+- Customize the radar's position and Toggle with `!radar` or `sm_radar` command, Settings are per player and are saved between sessions.
+
 - Teammate dots change color based on health:
 
   - Green: Above 50% health
+
   - Red: 50% health or below
-  
+
 - Pinging system where players can mark locations on the radar for their teammates
 
   - Use `!mapping` or `sm_mapping` to ping the location you're looking at, ideally use `bind <key> "say /mapping"`.
+
   - Pings appear as yellow exclamation marks (!) on the radar
+
   - Pings last for 5 seconds and have a 3-second cooldown
 
+- Admin-only features:
+
+  - Toggle showing disguised enemy Spies globally on the radar 
+
+  - Reload radar configuration on-the-fly with `!reloadradar` or through the radar menu
 
 ## Requirements
 
@@ -53,40 +71,15 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Installation
 
 1. Download the latest `team_radar.smx` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+
 2. Place it in your plugins folder `addons/sourcemod/plugins`.
+
 3. Reload the plugin or restart your server.
 
-## Core Customization
+## Configuration
 
-1. Download the latest `team_radar.sp` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page
-
-2. Edit these commented lines:
-
-```
-//╭──────────────────────────────────.★..─╮
-
-// Core Settings
-#define UPDATE_INTERVAL 0.1 // How often the radar updates (in seconds)
-#define RADAR_SIZE 2560.0 // The in-game units the radar covers
-#define RADAR_SCALE 0.225 // The size of the radar on the screen (0-1)
-
-// Colors (RGBA format)
-#define COLOR_SELF {255, 255, 0, 255} // Yellow
-#define COLOR_TEAMMATE_HEALTHY {0, 255, 0, 255} // Green
-#define COLOR_TEAMMATE_LOW {255, 0, 0, 255} // Red
-#define COLOR_PING {255, 255, 0, 255} // Yellow
-
-// Ping system settings
-#define MAX_PINGS 5			
-#define PING_DURATION 5.0
-#define PING_COOLDOWN 3.0
-
-//╰─..★.───────────────────────────────────╯
-```
-
-
-3. Compile
-
+Edit the config file `tf2_team_radar.cfg` in your `addons/sourcemod/configs/` directory.
+You can reload the configuration in-game using the `!reloadradar` command or in the `!radar` menu (admin only).
 
 ## License & Contributing
 
