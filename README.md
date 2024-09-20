@@ -29,11 +29,10 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
    - Players can mark locations on the radar for their teammates
    - Use `!mapping` or `sm_mapping` to ping (tip: `bind <key> "say /mapping"`)
    - Pings appear as yellow exclamation marks (!) on the radar
-   - Pings last for 5 seconds with a 3-second cooldown
 
 5. **Admin Features**:
    - Toggle visibility of disguised enemy Spies globally on the radar
-   - Config file to adjust the plugin's core settings (colors, update interval & more).
+   - Config file to adjust the plugin's core settings (colors, update interval & more)
    - Reload radar configuration on-the-fly with `!reloadradar` or through the radar menu
 
 ## Requirements
