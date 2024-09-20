@@ -42,9 +42,11 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Installation
 
 1. Download the latest `team_radar.smx` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
-
-2. Place it in your plugins folder `addons/sourcemod/plugins`.
-
+	- Place it in your plugins folder `addons/sourcemod/plugins`.
+	
+2. Download the latest `tf2_team_radar.cfg` from the [Releases](https://github.com/vexx-sm/tf2-team-radar/releases) page.
+	- Place it in your configs folder `addons/sourcemod/configs`.
+	
 3. Reload the plugin or restart your server.
 
 ## Configuration
