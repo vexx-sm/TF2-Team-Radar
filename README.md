@@ -1,6 +1,6 @@
 <h1 align="center">Team Fortress 2 Team Radar</h1>
 
-This plugin creates a simple, real-time radar display for each player, showing the positions of their teammates relative to their own position. 
+This plugin creates a simple, real-time radar for each player, showing the positions of their teammates relative to their own position. 
 
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
