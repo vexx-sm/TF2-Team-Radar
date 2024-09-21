@@ -7,7 +7,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 > [!NOTE]
 > The plugin primarily shows teammates and was originally designed for certain practicing environments. It does not provide information about enemy positions.
 
-![](https://github.com/vexx-sm/TF2-Team-Radar/blob/main/radar.gif)
+![](https://i.imgur.com/WOBMsfR.gif)
 
 ## Features
 
