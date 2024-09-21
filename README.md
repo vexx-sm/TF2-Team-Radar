@@ -23,7 +23,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
    - Pings appear as yellow exclamation marks (!) for 5 seconds, with a 3-second cooldown between pings.
 
 4. **Extras**:
-   - The radar's position can be changed per player or toggled on/off through !radar. (Saved between sessions)
+   - The radar's position can be changed per player or toggled on/off through `!radar`. (Saved between sessions)
    - Config file to adjust the plugin's core settings. (colors, update interval, area covered, radar scale)
    - Admins can toggle the visibility of disguised enemy Spies.
    - Admins can reload the configuration on-the-fly with `!reloadradar` or through the radar menu.
