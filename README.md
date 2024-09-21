@@ -5,7 +5,7 @@ This plugin creates a simple, real-time radar display for each player, showing t
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
 > [!NOTE]
-> **This plugin primarily shows teammates** and was originally designed for team coordination and awareness in a practicing environment (Comp coaching/scrims). **It does not provide information about enemy positions.**
+> **This plugin primarily shows teammates** and was originally designed for certain practicing environments. **It does not provide information about enemy positions.**
 
 ## Features
 
@@ -15,26 +15,23 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
      - Red: 50% health or below
    - Represents the player as a yellow up-facing arrow (⮝) in the center
    - Radar is toggleable and it's position is adjustable, settings are saved per player
-   - Everything neatly packed under a `!radar` or `sm_radar` command
+   - Everything neatly packed under the `!radar` menu
 
-2. **Dynamic Updates**:
-   - Radar updates at regular intervals (customizable through config file)
-   - Calculates and displays relative positions of all teammates
-   - Rotates based on player's view angle, to mimic a normal radar
-
-3. **Range Limitation**:
-   - Only teammates within a certain range are displayed (customizable through config file)
-
-4. **Pinging System**:
-   - Players can mark locations on the radar for their teammates
-   - Use `!pingradar` or `sm_pingradar` to ping (tip: `bind <key> "say /pingradar"`)
+2. **Pinging System**:
+   - Players can mark where they're looking at on the radar for their teammates
+   - Use `!pingradar` to ping (ideally: `bind <key> "say /pingradar"`)
    - Pings appear as yellow exclamation marks (!) on the radar
 
-5. **Admin Features**:
-   - Toggle visibility of disguised enemy Spies globally on the radar
-   - Config file to adjust the plugin's core settings (colors, update interval & more)
-   - Reload radar configuration on-the-fly with `!reloadradar` or through the radar menu
-
+3. **Admin Features**:
+   - Toggle visibility of disguised enemy Spies globally
+   - Reload the cfg on-the-fly with `!reloadradar` or through the radar menu
+     
+4. **Customizable**: (through the config file)
+   - How many in game units the radar covers
+   - How often the radar updates in seconds
+   - The size of the radar on the screen
+   - All colors can be changed (RGBA)
+   
 ## Requirements
 
 - The latest [SourceMod](https://www.sourcemod.net/downloads.php) release.
