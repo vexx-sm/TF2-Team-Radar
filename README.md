@@ -5,7 +5,7 @@ This plugin creates a simple, real-time radar display for each player, showing t
 The radar uses SourceMod's HUD text functionality for rendering, making it a lightweight solution that doesn't require any client-side modifications.
 
 > [!NOTE]
-> **The plugin primarily shows teammates and was originally designed for certain practicing environments. It does not provide information about enemy positions.**
+> The plugin primarily shows teammates and was originally designed for certain practicing environments. It does not provide information about enemy positions.
 
 ## Features
 
