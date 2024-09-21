@@ -14,7 +14,7 @@ int g_ColorTeammateHealthy[4] = {0, 255, 0, 255};
 int g_ColorTeammateLow[4] = {255, 0, 0, 255};
 int g_ColorPing[4] = {255, 255, 0, 255};
 
-// Ping settings
+// Will be moved to the cfg
 #define MAX_PINGS 5			
 #define PING_DURATION 5.0
 #define PING_COOLDOWN 3.0
