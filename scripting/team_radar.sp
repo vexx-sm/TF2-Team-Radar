@@ -31,7 +31,7 @@ public Plugin myinfo = {
     name = "TF2 Team Radar",
     author = "vexx-sm",
     description = "Adds a basic team-only radar to Team Fortress 2.",
-    version = "1.3.0",
+    version = "1.4.0",
     url = "https://github.com/vexx-sm/tf2-team-radar"
 };
 
