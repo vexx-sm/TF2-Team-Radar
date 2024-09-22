@@ -7,7 +7,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 > [!NOTE]
 > The plugin primarily shows teammates and was originally designed for certain practicing environments. It does not provide information about enemy positions.
 
-https://github.com/user-attachments/assets/ad62b058-3dfc-434b-af11-4e0039e1d05f
+[!!preview](https://github.com/user-attachments/assets/ad62b058-3dfc-434b-af11-4e0039e1d05f)
 
 ## Features
 
