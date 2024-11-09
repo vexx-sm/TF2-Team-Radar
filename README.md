@@ -12,17 +12,18 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 ## Features
 
 1. **Radar Display**:
+   - Enabled by default.
    - Shows the player as a yellow up-facing arrow (⮝).
    - Shows teammates as colored dots (●) or arrows (▽ / △) based on elevation relative to the player.
    - Teammate markers change color based on health:
      - Green: Above 50% health
      - Red: 50% health or below
 
-2. **Pinging System**:
+3. **Pinging System**:
    - Players can mark where they're looking at on the radar.
    - Pings appear as yellow exclamation marks (!) for 5 seconds, with a 3-second cooldown between pings.
 
-3. **Extras**:
+4. **Extras**:
    - The radar's position can be adjusted per player or toggled on/off through `!radar`. (Saved between sessions)
    - A Config file to adjust the plugin's core settings. (colors, update interval, area covered, radar scale)
    - Admins can reload the config on-the-fly with `!reloadradar` or through the radar menu.   
