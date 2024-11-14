@@ -28,6 +28,12 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
    - A Config file to adjust the plugin's core settings. (colors, update interval, area covered, radar scale)
    - Admins can reload the config on-the-fly with `!reloadradar` or through the radar menu.   
    - Admins can toggle the visibility of disguised enemy Spies.
+   - Colors are customizable per player. (Saved between sessions)
+
+
+<p>
+  <img width="302" height="219" src="https://github.com/user-attachments/assets/e14af3b3-9129-44cd-b9f4-312010302db9" hspace="50">
+</p>
 
 ## Commands
 
