@@ -37,7 +37,7 @@ The radar uses SourceMod's HUD text functionality for rendering, making it a lig
 
 ## Commands
 
-- `!radar` Opens a menu to toggle the radar or change its position. Settings are saved per player and persist between sessions (cookies).
+- `!radar` Opens a menu to toggle the radar, change its position or colors. Settings are saved per player and persist between sessions (cookies).
 - `!pingradar` Ping a location on the radar. Ideally, use `bind <key> "say /pingradar"`
 - `!reloadradar` Admin command to reload the config file.
 
